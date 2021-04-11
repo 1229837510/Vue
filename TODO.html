@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TODO</title>
+</head>
+<body>
+<script src="./js/vue.js"></script>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+
+<div id="app">
+    <input @keydown.enter="add_task" class="edit" type="text" v-model="task.content" placeholder="编写任务">
+    <div class="list">
+
+        <div class="unit" v-for="(item,index) in list">
+            <input class="cb" @click="changeState(index)" :checked="item.finished" type="checkbox">
+            <span
+                    :class="{'finish':item.finished}">{{item.content}}</span>
+            <button @click="removeTask(index)" class="del">删除</button>
+        </div>
+        <br>
+        <button class="btn" @click="delMembers">删除所选项</button>
+
+    </div>
+
+</div>
+<script>
+    const app = new Vue({
+        el: "#app",
+        data:{
+            task:{
+              content: '',
+              finished:false,
+                deleted:false,
+                index:0
+            },
+            list: []
+        },
+
+        methods: {
+
+            add_task:function (index) {
+                this.list.push(this.task);
+            this.task={
+                content: '',
+                finished:false,
+                deleted:false
+                }
+            },
+            changeState:function (index) {
+                let curState =this.list[index].finished;
+                this.list[index].finished =!curState;
+
+
+            },
+            removeTask:function (index) {
+                this.list.splice(index,1)
+            },
+
+            delMembers:function () {
+                let items = $(".cb:checked");
+                let len = items.length;
+                for (let i=0;i<len;i++){
+                    $(items[i]).parents(".unit").remove()
+                               }
+
+            }
+
+
+        }
+
+    });
+
+</script>
+<style lang="len">
+    .edit{
+        display: block;
+        width: 80%;
+        height: 35px;
+        line-height: 35px;
+        margin: 30px auto;
+        box-sizing: border-box;
+        padding-left: 4px;
+        border-radius: 4px;
+        border: 1px solid #2fe5dd;
+        outline: 0;
+        box-shadow: 0 0 5px #ccc;
+    }
+    .list{
+        margin: 0 auto;
+        width: 80%;
+    }
+    .unit{
+        position: relative;
+        padding: 10px 0;
+        border-bottom: 1px solid #efefef;
+
+    }
+.unit:last-child{
+    border-bottom: 1px solid #efefef;
+}
+    .del{
+        background: red;
+        text-decoration: none;
+        position: absolute;
+        right: 0;
+        font-size: 12px;
+        border: 0;
+        outline: 0;
+        padding: 2px 5px;
+        border-radius: 5px;
+        color: #ccc;
+
+    }
+.finish{
+    text-decoration: line-through;
+    color: #2fe5dd;
+}
+    .btn{
+        background-color: #29b8b8;
+        border-radius: 8px;
+    }
+</style>
+</body>
+</html>
